@@ -1,0 +1,14 @@
+# vsc
+.vscode
+
+# Eclipse
+.classpath
+.project
+.settings/
+
+# IntelliJ
+.idea/
+/out/
+
+# mpeltonen/sbt-idea plugin
+.idea_modules/
