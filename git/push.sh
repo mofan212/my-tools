@@ -4,6 +4,11 @@
 #
 # 暂存当前变更并切换到目标分支，push 后又切回原始分支，使用 cherry-pick 将目标分支的提交 pick 到原始分支
 
+# 替换为目标项目目录
+PROJECT_PATH=""
+# 替换为目标分支
+TARGET_BRANCH=""
+
 # 判断指定目录是否存在
 function existDir() {
   cd "$1" &>/dev/null || return 1
@@ -67,25 +72,21 @@ function push() {
   git stash drop
 }
 
-# 替换为目标项目目录
-PROJECT_PATH=""
 if [ -z "$PROJECT_PATH" ]; then
-  read -r -p "项目目录信息为空，请前往脚本配置，或者手动录入: " INPUT_PATH
-  while ! existDir "$INPUT_PATH"; do
-    read -r -p "项目目录不存在，请重新输入: " INPUT_PATH
-  done
-  while ! existGitDir; do
-    echo -e "\e[1;31m当前目录未被 git 管理\e[0m"
-    read -r -p "请重新输入项目目录: " INPUT_PATH
-    while ! existDir "$INPUT_PATH"; do
-      read -r -p "项目目录不存在，请重新输入: " INPUT_PATH
-    done
-  done
-  echo -e "\n"
+  read -r -p "项目目录信息为空，请前往脚本配置，或者手动录入: " PROJECT_PATH
 fi
 
-# 替换为目标分支
-TARGET_BRANCH=""
+while ! existDir "$PROJECT_PATH"; do
+  read -r -p "项目目录不存在，请重新输入: " PROJECT_PATH
+done
+while ! existGitDir; do
+  echo -e "\e[1;31m当前目录未被 git 管理\e[0m"
+  read -r -p "请重新输入项目目录: " PROJECT_PATH
+  while ! existDir "$PROJECT_PATH"; do
+    read -r -p "项目目录不存在，请重新输入: " PROJECT_PATH
+  done
+done
+
 if [ -z "$TARGET_BRANCH" ]; then
   read -r -p "目标分支信息为空，请前往脚本配置，或者手动录入: " INPUT_BRANCH
   while ! git show-ref --quiet refs/heads/"$INPUT_BRANCH"; do
@@ -116,7 +117,7 @@ if [ -n "$(git status -s)" ]; then
     push "$TARGET_BRANCH" "$COMMIT_MESSAGE" "$CURRENT_BRANCH"
   fi
 else
-  echo -e "\e[1;33m当前仓库下不存在变更文件\e[0m"
+  echo -e "\e[1;33m当前仓库下($(pwd))不存在变更文件\e[0m"
 fi
 
 echo -e "\n按任意键退出..."
