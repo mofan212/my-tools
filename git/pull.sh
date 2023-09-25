@@ -1,4 +1,6 @@
 #!/bin/bash
+# Written by mofan
+#
 # 通过完整的项目地址或者项目名称依次在 GitHub、Gitee 上拉取代码
 
 GITHUB_USER_NAME=""
@@ -30,8 +32,8 @@ while true; do
     delExistingProject "$projectName"
     echo "尝试在 GitHub 下使用 HTTP 克隆..."
     if [ -z "$GITHUB_USER_NAME" ]; then
-        echo "拉取项目的 GitHub 所有者用户名为空"
-        read -r -p "请输入: " GITHUB_USER_NAME
+      echo "拉取项目的 GitHub 所有者用户名为空"
+      read -r -p "请输入: " GITHUB_USER_NAME
     fi
     if git clone https://github.com/"$GITHUB_USER_NAME"/my-tools.git"$projectName".git; then
       echo "成功在 GitHub 下使用 HTTP 克隆项目！"
@@ -40,9 +42,9 @@ while true; do
       echo -e "在 GitHub 下使用 HTTP 克隆失败 :( \n"
       echo "尝试在 Gitee 下使用 SSH 克隆..."
       if [ -z "$GITEE_USER_NAME" ]; then
-              echo "拉取项目的 Gitee 所有者用户名为空"
-              read -r -p "请输入: " GITEE_USER_NAME
-          fi
+        echo "拉取项目的 Gitee 所有者用户名为空"
+        read -r -p "请输入: " GITEE_USER_NAME
+      fi
       if git clone https://gitee.com/"$GITEE_USER_NAME"/"$projectName".git; then
         echo "成功在 Gitee 下使用 SSH 克隆项目！"
         break

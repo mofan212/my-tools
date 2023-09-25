@@ -43,15 +43,22 @@ function checkConflict() {
   fi
 }
 
+# 检查当前分支是否关联远程仓库
+# 1 目标分支
+function pullAndCheckRemote() {
+  if ! git pull; then
+    echo -e "\e[1;31m当前分支未关联远程仓库，将尝试推送到远端\e[0m"
+    git push --set-upstream origin "$1"
+  fi
+}
+
 # 推送代码
 # 1 目标分支 2 commit message 3 原始分支
 function push() {
   eval "$(git add .)"
   git stash save "$2"
   git checkout "$1"
-  # 先 push，防止目标分支未与远程关联，默认配置的远程仓库别名为 origin
-  git push --set-upstream origin "$1"
-  git pull
+  pullAndCheckRemote "$1"
   git stash apply 0
   checkConflict
   eval "$(git add .)"
