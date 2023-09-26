@@ -3,6 +3,7 @@
 # 2023-09-22
 #
 # 暂存当前变更并切换到目标分支，push 后又切回原始分支，使用 cherry-pick 将目标分支的提交 pick 到原始分支
+# 执行脚本时需要传入本次 commit message，如果没传入，则会在后续校验并要求补充
 
 # 替换为目标项目目录
 PROJECT_PATH=""
@@ -46,7 +47,7 @@ function checkConflict() {
 # 检查当前分支是否关联远程仓库
 # 1 目标分支
 function pullAndCheckRemote() {
-  if ! git pull; then
+  if [ -z "$(git remote)" ]; then
     echo -e "\e[1;31m当前分支未关联远程仓库，将尝试推送到远端\e[0m"
     git push --set-upstream origin "$1"
   fi
