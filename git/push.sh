@@ -80,24 +80,24 @@ function push() {
 }
 
 if [ -z "$PROJECT_PATH" ]; then
-  read -r -p "项目目录信息为空，请前往脚本配置，或者手动录入: " PROJECT_PATH
+  read -erp "项目目录信息为空，请前往脚本配置，或者手动录入: " PROJECT_PATH
 fi
 
 while ! existDir "$PROJECT_PATH"; do
-  read -r -p "项目目录不存在，请重新输入: " PROJECT_PATH
+  read -erp "项目目录不存在，请重新输入: " PROJECT_PATH
 done
 while ! existGitDir; do
   echo -e "\e[1;31m当前目录未被 git 管理\e[0m"
-  read -r -p "请重新输入项目目录: " PROJECT_PATH
+  read -erp "请重新输入项目目录: " PROJECT_PATH
   while ! existDir "$PROJECT_PATH"; do
-    read -r -p "项目目录不存在，请重新输入: " PROJECT_PATH
+    read -erp "项目目录不存在，请重新输入: " PROJECT_PATH
   done
 done
 
 if [ -z "$TARGET_BRANCH" ]; then
-  read -r -p "目标分支信息为空，请前往脚本配置，或者手动录入: " INPUT_BRANCH
+  read -erp "目标分支信息为空，请前往脚本配置，或者手动录入: " INPUT_BRANCH
   while ! git show-ref --quiet refs/heads/"$INPUT_BRANCH"; do
-    read -r -p "本地不存在目标分支，请重新输入: " INPUT_BRANCH
+    read -erp "本地不存在目标分支，请重新输入: " INPUT_BRANCH
   done
   TARGET_BRANCH=$INPUT_BRANCH
   echo -e "\n"
@@ -107,9 +107,9 @@ COMMIT_MESSAGE=$1
 # -z 字符串长度为 0 时返回 true
 if [ -z "$COMMIT_MESSAGE" ]; then
   echo -e "\e[1;31mcommit message 不能为空\e[0m"
-  read -r -p "请重新输入 commit message: " INPUT_COMMIT_MESSAGE
+  read -erp "请重新输入 commit message: " INPUT_COMMIT_MESSAGE
   while [ -z "$INPUT_COMMIT_MESSAGE" ]; do
-    read -r -p "commit message 为空，请重新录入: " INPUT_COMMIT_MESSAGE
+    read -erp "commit message 为空，请重新录入: " INPUT_COMMIT_MESSAGE
   done
   COMMIT_MESSAGE=$INPUT_COMMIT_MESSAGE
   echo -e "\n"
